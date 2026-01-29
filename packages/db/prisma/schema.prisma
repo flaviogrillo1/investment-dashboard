@@ -1,0 +1,273 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// AUTH (NextAuth)
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  portfolios    Portfolio[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================
+// PORTFOLIO
+// ============================================
+
+model Portfolio {
+  id               String      @id @default(cuid())
+  userId           String
+  user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name             String      @default("My Portfolio")
+  baseCurrency     Currency    @default(EUR) // EUR or USD
+  benchmark        String      @default("SPY") // SPY, ^GDAXI, etc.
+  riskFreeRate     Float       @default(0.03) // 3% annual
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  positions        Position[]
+  transactions     Transaction[]
+  watchlists       Watchlist[]
+  alerts           Alert[]
+
+  @@map("portfolios")
+}
+
+// ============================================
+// POSITIONS
+// ============================================
+
+model Position {
+  id              String         @id @default(cuid())
+  portfolioId     String
+  portfolio       Portfolio      @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  // Ticker info
+  ticker          String
+  name            String?
+  assetType       AssetType      @default(EQUITY)
+  currency        Currency       @default(USD)
+
+  // Holdings
+  quantity        Float
+  avgCost         Float          // Average cost basis per share
+
+  // Metadata
+  broker          String?
+  tags            String[]       @default([])
+  notes           String?        @db.Text
+
+  // Calculated fields (updated by backend)
+  currentPrice     Float?
+  currentValue    Float?
+  costBasis       Float?
+  unrealizedPnL   Float?
+  unrealizedPnLPercent Float?
+  weight          Float?         // Weight in portfolio
+
+  // Performance metrics
+  dailyChange      Float?
+  dailyChangePercent Float?
+  volatility30d    Float?
+  volatility90d    Float?
+  beta            Float?
+
+  lastPriceUpdate  DateTime?
+
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  transactions     Transaction[]
+
+  @@unique([portfolioId, ticker])
+  @@index([portfolioId])
+  @@map("positions")
+}
+
+// ============================================
+// TRANSACTIONS
+// ============================================
+
+model Transaction {
+  id              String         @id @default(cuid())
+  positionId      String?
+  position        Position?      @relation(fields: [positionId], references: [id], onDelete: SetNull)
+
+  portfolioId     String
+  portfolio       Portfolio      @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  type            TransactionType
+  date            DateTime
+  quantity        Float
+  price           Float          // Price per share
+  currency        Currency       @default(USD)
+
+  fees            Float          @default(0)
+  notes           String?        @db.Text
+
+  // Calculated
+  totalValue      Float          // quantity * price + fees
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([portfolioId])
+  @@index([positionId])
+  @@index([date])
+  @@map("transactions")
+}
+
+// ============================================
+// WATCHLIST
+// ============================================
+
+model Watchlist {
+  id              String      @id @default(cuid())
+  portfolioId     String
+  portfolio       Portfolio   @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  ticker          String
+  name            String?
+  notes           String?     @db.Text
+  addedAt         DateTime    @default(now())
+
+  // Calculated fields
+  currentPrice    Float?
+  dailyChange     Float?
+  dailyChangePercent Float?
+
+  lastPriceUpdate DateTime?
+
+  @@unique([portfolioId, ticker])
+  @@index([portfolioId])
+  @@map("watchlists")
+}
+
+// ============================================
+// ALERTS
+// ============================================
+
+model Alert {
+  id              String      @id @default(cuid())
+  portfolioId     String
+  portfolio       Portfolio   @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  ticker          String?
+  type            AlertType
+  condition       String      // JSON string with conditions
+
+  // Target values
+  targetPrice     Float?
+  targetChangePercent Float?
+
+  // Status
+  active          Boolean     @default(true)
+  triggered       Boolean     @default(false)
+  triggeredAt     DateTime?
+
+  // Notification
+  notified        Boolean     @default(false)
+  notificationSentAt DateTime?
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([portfolioId])
+  @@index([active])
+  @@map("alerts")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum Currency {
+  EUR
+  USD
+  GBP
+  JPY
+}
+
+enum AssetType {
+  EQUITY
+  ETF
+  CRYPTO
+  FUND
+  BOND
+  COMMODITY
+  OTHER
+}
+
+enum TransactionType {
+  BUY
+  SELL
+  DIVIDEND
+  FEE
+  DEPOSIT
+  WITHDRAWAL
+}
+
+enum AlertType {
+  PRICE_TARGET
+  PERCENT_CHANGE
+  DROPS_BELOW
+  RISES_ABOVE
+}
