@@ -1,0 +1,82 @@
+import { Position, PortfolioSummary, ChartDataPoint } from './types';
+
+export const mockPositions: Position[] = [
+  {
+    id: '1',
+    symbol: 'AAPL',
+    name: 'Apple Inc.',
+    quantity: 50,
+    avgPrice: 150.00,
+    currentPrice: 178.50,
+    value: 8925.00,
+    gainLoss: 1425.00,
+    gainLossPercent: 19.0,
+  },
+  {
+    id: '2',
+    symbol: 'GOOGL',
+    name: 'Alphabet Inc.',
+    quantity: 30,
+    avgPrice: 120.00,
+    currentPrice: 141.25,
+    value: 4237.50,
+    gainLoss: 637.50,
+    gainLossPercent: 17.7,
+  },
+  {
+    id: '3',
+    symbol: 'MSFT',
+    name: 'Microsoft Corporation',
+    quantity: 40,
+    avgPrice: 280.00,
+    currentPrice: 378.90,
+    value: 15156.00,
+    gainLoss: 3956.00,
+    gainLossPercent: 35.3,
+  },
+  {
+    id: '4',
+    symbol: 'AMZN',
+    name: 'Amazon.com Inc.',
+    quantity: 25,
+    avgPrice: 145.00,
+    currentPrice: 178.25,
+    value: 4456.25,
+    gainLoss: 831.25,
+    gainLossPercent: 22.9,
+  },
+  {
+    id: '5',
+    symbol: 'TSLA',
+    name: 'Tesla Inc.',
+    quantity: 100,
+    avgPrice: 220.00,
+    currentPrice: 248.50,
+    value: 24850.00,
+    gainLoss: 2850.00,
+    gainLossPercent: 13.0,
+  },
+];
+
+export const mockPortfolioSummary: PortfolioSummary = {
+  totalValue: 57624.75,
+  totalGainLoss: 9700.00,
+  totalGainLossPercent: 20.2,
+  dayChange: 1243.50,
+  dayChangePercent: 2.2,
+};
+
+export const mockChartData: ChartDataPoint[] = [
+  { date: '2024-01', value: 45000 },
+  { date: '2024-02', value: 46200 },
+  { date: '2024-03', value: 47500 },
+  { date: '2024-04', value: 46800 },
+  { date: '2024-05', value: 48900 },
+  { date: '2024-06', value: 51200 },
+  { date: '2024-07', value: 49800 },
+  { date: '2024-08', value: 52100 },
+  { date: '2024-09', value: 53800 },
+  { date: '2024-10', value: 55200 },
+  { date: '2024-11', value: 56800 },
+  { date: '2024-12', value: 57624 },
+];
