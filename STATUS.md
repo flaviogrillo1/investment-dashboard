@@ -76,6 +76,14 @@
 
 ## 🚧 In Progress (20%)
 
+### Vercel Frontend Deployment - ⚠️ **Needs Manual Configuration**
+- ✅ Next.js configured in apps/web
+- ✅ vercel.json created with framework: "nextjs"
+- ⚠️ **Issue**: Vercel linked from root, needs Root Directory = "apps/web"
+- ⚠️ **Action Required**: See VERCEL_DIAGNOSIS.md for fix instructions
+- 📋 Two projects found: "investment-dashboard" (root) + "web" (apps/web)
+- 🎯 **Solution**: Set Root Directory to `apps/web` in Vercel dashboard
+
 ### Backend Deployment
 - ✅ Dockerfile configured for Railway
 - ✅ railway.toml configuration added
