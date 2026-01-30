@@ -1,13 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
   "buildCommand": "cd apps/web && npm run build",
   "outputDirectory": "apps/web/.next",
   "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["iad1"],
   "env": {
-    "NEXTAUTH_URL": "@next_auth_url",
-    "NEXTAUTH_SECRET": "@next_auth_secret",
-    "DATABASE_URL": "@database_url",
-    "REDIS_URL": "@redis_url"
+    "NEXTAUTH_URL": {
+      "description": "The URL of your deployed app",
+      "value": "https://your-app.vercel.app"
+    }
   }
 }
