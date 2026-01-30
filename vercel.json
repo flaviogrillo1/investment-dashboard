@@ -6,9 +6,6 @@
   "framework": "nextjs",
   "regions": ["iad1"],
   "env": {
-    "NEXTAUTH_URL": {
-      "description": "The URL of your deployed app",
-      "value": "https://your-app.vercel.app"
-    }
+    "NEXTAUTH_URL": "https://investment-dashboard.vercel.app"
   }
 }
