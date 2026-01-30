@@ -2,7 +2,7 @@
 
 **Date**: 2026-01-30
 **Status**: 🚧 In Progress
-**Completion**: ~75%
+**Completion**: ~80%
 
 ---
 
@@ -74,23 +74,26 @@
 
 ---
 
-## 🚧 In Progress (25%)
+## 🚧 In Progress (20%)
 
 ### Backend Deployment
-- ⏳ Deploy FastAPI to Railway/Vercel
-- ⏳ Configure production Redis
-- ⏳ Setup production database (Neon/PostgreSQL)
+- ✅ Dockerfile configured for Railway
+- ✅ railway.toml configuration added
+- ✅ CORS updated for Vercel frontend
+- ⏳ Deploy to Railway (manual step required)
+- ⏳ Configure production Redis (Upstash)
+- ⏳ Setup production database (Neon)
 
 ---
 
-## 📋 To Do (25%)
+## 📋 To Do (20%)
 
 ### High Priority
-1. **Deploy backend API to Railway/Vercel** (1-2h)
-2. Connect frontend to backend API (1h)
-3. Configure environment variables in production (30min)
-4. Test end-to-end integration (1h)
-5. Implement portfolio/position CRUD (2h)
+1. **Deploy backend to Railway** (manual - requires Railway account)
+2. Configure Neon database
+3. Configure Upstash Redis
+4. Connect frontend to backend API (1h)
+5. Test end-to-end integration (1h)
 
 ### Medium Priority
 6. Add transaction import (CSV)
