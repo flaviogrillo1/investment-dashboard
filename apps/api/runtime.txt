@@ -1,0 +1,8 @@
+python-version = "3.11"
+uvicorn = "==0.30.0"
+fastapi = "==0.115.0"
+pydantic = "==2.9.0"
+pydantic-settings = "==2.5.0"
+yfinance = "==0.2.44"
+redis = "==5.2.0"
+numpy = "==2.1.0"

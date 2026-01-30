@@ -43,7 +43,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        os.getenv("NEXT_PUBLIC_API_URL", "http://localhost:3000")
+        "https://web-nu-nine-56.vercel.app",
+        os.getenv("NEXT_PUBLIC_API_URL", "http://localhost:3000"),
+        "*"
     ],
     allow_credentials=True,
     allow_methods=["*"],
